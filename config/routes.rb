@@ -3,3 +3,4 @@ Rails.application.routes.draw do
   get "/", to: "tweets#index"
   resources :tweets, only: [:index, :new, :create, :destroy]
 end
+
