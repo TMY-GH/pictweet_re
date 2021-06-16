@@ -1,6 +1,10 @@
 class TweetsController < ApplicationController
+  before_action :set_tweet, only: [:edit, :show]
+  before_action :move_to_index, except: [:index, :show]
+
   def index
-    @tweets = Tweet.all
+    # includesはTweet.allの兼ねている
+    @tweets = Tweet.includes(:user).order("created_at DESC")
   end
 
   def new
@@ -25,9 +29,22 @@ class TweetsController < ApplicationController
     tweet.update(tweet_params)
   end
 
+  def show
+  end
+
   private
   def tweet_params
-    params.require(:tweet).permit(:name, :text, :image)
+    params.require(:tweet).permit(:text, :image).merge(user_id: current_user.id)
+  end
+
+  def set_tweet
+    @tweet = Tweet.find(params[:id])
+  end
+
+  def move_to_index
+    unless user_signed_in?
+      redirect_to action: :index
+    end
   end
 
 end
