@@ -3,7 +3,8 @@ class TweetsController < ApplicationController
   before_action :move_to_index, except: [:index, :show]
 
   def index
-    @tweets = Tweet.all
+    # includesはTweet.allの兼ねている
+    @tweets = Tweet.includes(:user)
   end
 
   def new
